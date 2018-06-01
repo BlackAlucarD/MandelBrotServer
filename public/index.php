@@ -1,20 +1,15 @@
 <?php
-if (PHP_SAPI == 'cli-server') {
-    // To help the built-in PHP dev server, check if the request was actually for
-    // something which should probably be served as a static file
-    $file = __DIR__ . $_SERVER['REQUEST_URI'];
-    if (is_file($file)) {
-        return false;
-    }
-}
+    // to get autoclass_map etc
+    require __DIR__ . '/../vendor/autoload.php';
 
-require __DIR__ . '/../vendor/autoload.php';
+    // get the settings for slim
+    $settings = require __DIR__ . '/../app/settings.php';
+    $app      = new \Slim\App($settings);
 
-$settings = require __DIR__ . '/../app/settings.php';
-$app = new \Slim\App($settings);
+    // set the dependencies like controller, view and logger
+    require __DIR__ . '/../app/dependencies.php';
 
-require __DIR__ . '/../app/dependencies.php';
+    // set the routes
+    require __DIR__ . '/../app/routes.php';
 
-require __DIR__ . '/../app/routes.php';
-
-$app->run();
+    $app->run();

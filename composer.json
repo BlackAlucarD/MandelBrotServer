@@ -3,7 +3,9 @@
     "psr-4": {
       "App\\": "app/"
     },
-    "classmap": ["app/classes/"]
+    "classmap": [
+      "app/classes/"
+    ]
   },
   "require": {
     "slim/slim": "^3.1",

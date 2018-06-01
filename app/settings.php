@@ -1,7 +1,7 @@
 <?php
-return [
-    'settings' => [
-        'displayErrorDetails' => true,
-        'addContentLengthHeader' => false,
-    ],
-];
+    return [
+          'settings' => [
+                'displayErrorDetails'    => true,
+                'addContentLengthHeader' => false,
+          ],
+    ];
