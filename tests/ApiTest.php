@@ -6,46 +6,78 @@
     class ApiTest extends TestCase {
 
         /**
-         * @var GuzzleHttp\Client
+         * @throws \GuzzleHttp\Exception\GuzzleException
          */
-        private $http;
+        public function testPost() {
+            // localhost forwarding
+            $url        = "http://c-numbers.me/";
 
-        public function connectClient($url, $paraArray = array()) {
-
-            $url .= '?';
-            foreach($paraArray as $key => $para) {
-                $url .= "&" . $key . "=" . $para;
-            }
-
-            $this->http = new GuzzleHttp\Client([ 'base_uri' => $url ]);
-        }
-
-        public function closeClient() {
-            $this->http = null;
-        }
-
-        public function testGet() {
-            $url       = "http://c-numbers.me/mandelbrot";
-            $paraArray = array(
+            $paraArray1 = array(
                   'realFrom'      => '-2',
-                  'realTo'        => '2',
-                  'imaginaryFrom' => '-2',
+                  'realTo'        => '0',
+                  'imaginaryFrom' => '0',
                   'imaginaryTo'   => '2',
                   'intervall'     => '0.05',
                   'maxIteration'  => '255'
             );
-            $this->connectClient($url, $paraArray);
+            $paraArray2 = array(
+                  'realFrom'      => '-2',
+                  'realTo'        => '0',
+                  'imaginaryFrom' => '-2',
+                  'imaginaryTo'   => '0',
+                  'intervall'     => '0.05',
+                  'maxIteration'  => '255'
+            );
+            $paraArray3 = array(
+                  'realFrom'      => '0',
+                  'realTo'        => '2',
+                  'imaginaryFrom' => '0',
+                  'imaginaryTo'   => '2',
+                  'intervall'     => '0.05',
+                  'maxIteration'  => '255'
+            );
+            $paraArray4 = array(
+                  'realFrom'      => '0',
+                  'realTo'        => '2',
+                  'imaginaryFrom' => '-2',
+                  'imaginaryTo'   => '0',
+                  'intervall'     => '0.05',
+                  'maxIteration'  => '255'
+            );
+            // Test Missing Parameters to get 400 StatusCode
+            $paraArrayFail = array(
+                  'realFrom'      => '0',
+                  'realTo'        => '2'
+            );
 
-            $response = $this->http->request('GET', 'user-agent');
+            $paraArray = array( $paraArray1, $paraArray2, $paraArray3, $paraArray4, $paraArrayFail );
 
-            $this->assertEquals(200, $response->getStatusCode());
+            $client   = new \GuzzleHttp\Client();
+            foreach($paraArray as $para) {
+                // async because we have to wait for the result to be calculated
+                $response = $client->postAsync(
+                      $url,
+                      [
+                            GuzzleHttp\RequestOptions::JSON => $para
+                      ]
+                )->then(
+                      function (\Psr\Http\Message\ResponseInterface $res) {
+                          // we expect 200 OK StatusCode
+                          $this->assertEquals(200, $res->getStatusCode());
 
-            $contentType = $response->getHeaders()["Content-Type"][0];
-            $this->assertEquals("application/json", $contentType);
+                          // response should be an json
+                          $contentType = $res->getHeaders()["Content-Type"][0];
+                          $this->assertEquals("application/json;charset=utf-8", $contentType);
+                      },
+                      function (\GuzzleHttp\Exception\RequestException $e) {
+                          // if error then we should get 400 ErrorCode
+                          $this->assertEquals(400, $e->getResponse()->getStatusCode());
+                      }
+                );
 
-            $userAgent = json_decode($response->getBody())->{"user-agent"};
-            $this->assertRegexp('/Guzzle/', $userAgent);
+                $response->wait();
+            }
 
-            $this->closeClient();
         }
+
     }
