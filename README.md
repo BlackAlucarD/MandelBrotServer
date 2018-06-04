@@ -33,3 +33,16 @@ Beispiel JSON:
 
 ### Response
 Die Api gibt ein eindimensionales JSON Objekt wieder zurück, welche die MandelBrot-Menge enthält.
+
+## Tests
+### PHPUnit
+#### Im Terminal 
+```
+phpunit /tests/ApiTests.php
+```
+ausführen um paar Tests Requests zu starten.
+#### Intellij PhpStorm
+1. PHP interpreter einrichten. 
+2. PHPUnit auf composer autoload einstellen.
+3. In PhpStorm Run->Edit Configuration PhpUnit hinzufügen und Test scope Directory auf "/tests"
+4. Dann Run->Run "Testname"
