@@ -10,14 +10,14 @@
          */
         public function testPost() {
             // localhost forwarding
-            $url        = "http://c-numbers.me/";
+            $url = "http://c-numbers.me/";
 
             $paraArray1 = array(
                   'realFrom'      => '-2',
                   'realTo'        => '0',
                   'imaginaryFrom' => '0',
                   'imaginaryTo'   => '2',
-                  'intervall'     => '0.05',
+                  'interval'     => '0.05',
                   'maxIteration'  => '255'
             );
             $paraArray2 = array(
@@ -25,7 +25,7 @@
                   'realTo'        => '0',
                   'imaginaryFrom' => '-2',
                   'imaginaryTo'   => '0',
-                  'intervall'     => '0.05',
+                  'interval'     => '0.05',
                   'maxIteration'  => '255'
             );
             $paraArray3 = array(
@@ -33,7 +33,7 @@
                   'realTo'        => '2',
                   'imaginaryFrom' => '0',
                   'imaginaryTo'   => '2',
-                  'intervall'     => '0.05',
+                  'interval'     => '0.05',
                   'maxIteration'  => '255'
             );
             $paraArray4 = array(
@@ -41,18 +41,18 @@
                   'realTo'        => '2',
                   'imaginaryFrom' => '-2',
                   'imaginaryTo'   => '0',
-                  'intervall'     => '0.05',
+                  'interval'     => '0.05',
                   'maxIteration'  => '255'
             );
             // Test Missing Parameters to get 400 StatusCode
             $paraArrayFail = array(
-                  'realFrom'      => '0',
-                  'realTo'        => '2'
+                  'realFrom' => '0',
+                  'realTo'   => '2'
             );
 
             $paraArray = array( $paraArray1, $paraArray2, $paraArray3, $paraArray4, $paraArrayFail );
 
-            $client   = new \GuzzleHttp\Client();
+            $client = new \GuzzleHttp\Client();
             foreach($paraArray as $para) {
                 // async because we have to wait for the result to be calculated
                 $response = $client->postAsync(
@@ -77,7 +77,5 @@
 
                 $response->wait();
             }
-
         }
-
     }

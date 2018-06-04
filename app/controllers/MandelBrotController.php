@@ -44,7 +44,7 @@
             $realTo        = doubleval($params['realTo']);
             $imaginaryFrom = doubleval($params['imaginaryFrom']);
             $imaginaryTo   = doubleval($params['imaginaryTo']);
-            $resolution    = doubleval($params['intervall']);
+            $resolution    = doubleval($params['interval']);
 
             $maxIteration = 255;
             if(isset($params['maxIteration'])) {
@@ -59,7 +59,7 @@
             $to->real      = $realTo;
             $to->imaginary = $imaginaryTo;
 
-            $jsonResponse = $response->withJson($this->define_set($from, $to, $resolution, $maxIteration), 200);
+            $jsonResponse = $response->withJson(array("response" => $this->define_set($from, $to, $resolution, $maxIteration)), 200);
             return $jsonResponse;
         }
 
@@ -142,7 +142,7 @@
         private function validateParam($param = array()) {
 
             // check id they are set (required for the calculations)
-            if(empty($param) || !isset($param['realTo']) || !isset($param['imaginaryTo']) || !isset($param['realFrom']) || !isset($param['imaginaryFrom']) || !isset($param['intervall'])) {
+            if(empty($param) || !isset($param['realTo']) || !isset($param['imaginaryTo']) || !isset($param['realFrom']) || !isset($param['imaginaryFrom']) || !isset($param['interval'])) {
                 return array(
                       'Error' => 'Empty or Parameters not set.',
                       "valid" => false
