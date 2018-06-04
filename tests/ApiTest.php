@@ -1,4 +1,5 @@
 <?php
+    require __DIR__ . '/../vendor/autoload.php';
 
     use PHPUnit\Framework\TestCase;
 
@@ -11,6 +12,7 @@
 
         public function connectClient($url, $paraArray = array()) {
 
+            $url .= '?';
             foreach($paraArray as $key => $para) {
                 $url .= "&" . $key . "=" . $para;
             }
@@ -23,12 +25,14 @@
         }
 
         public function testGet() {
-            $url       = "http://c-numbers.me?RESTurl=api";
+            $url       = "http://c-numbers.me/mandelbrot";
             $paraArray = array(
-                  'real'       => '-2',
-                  'imaginary'  => '-2',
-                  'bsize'      => '3',
-                  'resolution' => '0.2'
+                  'realFrom'      => '-2',
+                  'realTo'        => '2',
+                  'imaginaryFrom' => '-2',
+                  'imaginaryTo'   => '2',
+                  'intervall'     => '0.05',
+                  'maxIteration'  => '255'
             );
             $this->connectClient($url, $paraArray);
 

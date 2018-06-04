@@ -8,7 +8,7 @@
 ### Unter Linux
 Coming soon...
 ## Usage
-Die Api nimmt nur unter der Route "localhost/mandelbrot" anfragen an.
+POST-Anfragen an localhost oder IP-Adresse.
 
 ### Request
 Die Api erwartet ein JSON header im POST Request mit folgenden Schlüsseln:

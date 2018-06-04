@@ -30,13 +30,15 @@
             $params = $request->getParsedBody();
             $error  = $this->validateParam($params);
             if(!$error['valid']) {
-                $errorResponse = $response->withBody($error['Error']);
-                $errorResponse->withStatus(400);
+                $errorResponse = $response->withJson($error['Error'],400);
                 return $errorResponse;
             }
 
-            // Give the system 5 minutes time to calc
-            set_time_limit(300);
+            // Give the system UNLIMITED TIME
+            set_time_limit(0);
+            ini_set('max_input_time', 0);
+            // and UNLIMITED POWER (memory)
+            ini_set('memory_limit', -1);
 
             $realFrom      = doubleval($params['realFrom']);
             $realTo        = doubleval($params['realTo']);
@@ -82,7 +84,7 @@
                 }
             }
 
-            return 0;
+            return $i;
         }
 
         /**
@@ -148,7 +150,7 @@
             }
 
             // check if the parsed body is an array, if not then it isn't a json/xml
-            if(is_array($param)) {
+            if(!is_array($param)) {
                 return array(
                       'Error' => 'The object which is parse into the body is not an xml/json.',
                       'valid' => false
