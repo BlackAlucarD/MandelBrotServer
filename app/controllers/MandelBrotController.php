@@ -17,7 +17,7 @@
         }
 
         /**
-         * The controller for the route /mandelbrot
+         * The controller for the route /
          *
          * @param Request  $request
          * @param Response $response
@@ -64,6 +64,53 @@
         }
 
         /**
+         * The controller for the route /multi
+         *
+         * @param Request  $request
+         * @param Response $response
+         * @param          $args
+         *
+         * @return Response
+         */
+        public function mandelBrotMultiAction(Request $request, Response $response, $args) {
+
+            $params = $request->getParsedBody();
+            $error  = $this->validateParam($params);
+            if(!$error['valid']) {
+                $errorResponse = $response->withJson($error['Error'],400);
+                return $errorResponse;
+            }
+
+            // Give the system UNLIMITED TIME
+            set_time_limit(0);
+            ini_set('max_input_time', 0);
+            // and UNLIMITED POWER (memory)
+            ini_set('memory_limit', -1);
+
+            $realFrom      = doubleval($params['realFrom']);
+            $realTo        = doubleval($params['realTo']);
+            $imaginaryFrom = doubleval($params['imaginaryFrom']);
+            $imaginaryTo   = doubleval($params['imaginaryTo']);
+            $resolution    = doubleval($params['interval']);
+
+            $maxIteration = 255;
+            if(isset($params['maxIteration'])) {
+                $maxIteration = intval($params['maxIteration']);
+            }
+
+            $from            = new \Complex();
+            $from->real      = $realFrom;
+            $from->imaginary = $imaginaryFrom;
+
+            $to            = new \Complex();
+            $to->real      = $realTo;
+            $to->imaginary = $imaginaryTo;
+
+            $jsonResponse = $response->withJson(array("response" => $this->define_set($from, $to, $resolution, $maxIteration, true)), 200);
+            return $jsonResponse;
+        }
+
+        /**
          * Check if a Complex number is in the mandelbrot set
          *
          * @param \Complex $point
@@ -100,35 +147,42 @@
         }
 
         /**
-         * Thie function defines the mandelbrot set
+         * This function defines the mandelbrot set
+         * $extended is for response set as an multi dimension array
          *
          * @param \Complex $min
          * @param \Complex $max
          * @param double   $resolution
          * @param int      $maxIteration
+         * @param bool     $extended
          *
          * @return array
          */
-        private function define_set(\Complex $min, \Complex $max, $resolution, $maxIteration = 255) {
+        private function define_set(\Complex $min, \Complex $max, $resolution, $maxIteration = 255, $extended = false) {
 
             $set             = array();
             $real_range      = range($min->real, $max->real, $resolution);
             $imaginary_range = range($min->imaginary, $max->imaginary, $resolution);
 
+            $x = 0;
             foreach($real_range as $real) {
-                // Uncomment this for multiple dimension array as return
-                //$set[$real] = array();
+                $y = 0;
+
                 foreach($imaginary_range as $imaginary) {
                     $current            = new \Complex();
                     $current->real      = $real;
                     $current->imaginary = $imaginary;
 
-                    // Uncomment this for multiple dimension arr
-                    //$set[round($real, 7).""][round($imaginary, 7).""] = $this->in_mandelBrot($current, $escape_depth);
-
-                    $set[] = $this->in_mandelBrot($current, $maxIteration);
+                    if($extended){
+                        $set[round($real, 7).""][round($imaginary, 7).""] = $this->in_mandelBrot($current, $maxIteration);
+                    } else {
+                        $set[] = $this->in_mandelBrot($current, $maxIteration);
+                    }
+                    $y++;
                 }
+                $x++;
             }
+
             return $set;
         }
 

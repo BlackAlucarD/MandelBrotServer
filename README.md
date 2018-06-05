@@ -1,4 +1,12 @@
 # MandelBrot Serverseite
+## Used Programs, Plugin, Frameworks
+* Slim Framework
+* PhpUnit
+* GuzzleHttp
+* Composer
+* Intelij PhpStorm
+* Xampp
+
 ## Server Lokal starten
 ### Unter Windoof
 1. xampp installieren
