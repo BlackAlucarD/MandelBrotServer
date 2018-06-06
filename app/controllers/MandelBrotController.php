@@ -174,7 +174,7 @@
                     $current->imaginary = $imaginary;
 
                     if($extended){
-                        $set[round($real, 7).""][round($imaginary, 7).""] = $this->in_mandelBrot($current, $maxIteration);
+                        $set[$real . ""][$imaginary . ""] = $this->in_mandelBrot($current, $maxIteration);
                     } else {
                         $set[] = $this->in_mandelBrot($current, $maxIteration);
                     }
