@@ -10,6 +10,14 @@
 
     class MandelBrotController {
 
+        const OK = 200;
+        const ACCEPTED = 202;
+        const BAD_REQUEST = 400;
+        const UNAUTHORIZED = 401;
+        const FORBIDDEN = 403;
+        const NOT_FOUND = 404;
+        const METHOD_NOT_ALLOWED = 405;
+
         protected $container;
 
         public function __construct(ContainerInterface $container) {
@@ -30,7 +38,7 @@
             $params = $request->getParsedBody();
             $error  = $this->validateParam($params);
             if(!$error['valid']) {
-                $errorResponse = $response->withJson($error['Error'],400);
+                $errorResponse = $response->withJson($error['Error'], self::BAD_REQUEST);
                 return $errorResponse;
             }
 
@@ -59,7 +67,10 @@
             $to->real      = $realTo;
             $to->imaginary = $imaginaryTo;
 
-            $jsonResponse = $response->withJson(array("response" => $this->define_set($from, $to, $resolution, $maxIteration)), 200);
+            $jsonResponse = $response->withJson(
+                  array( "response" => $this->define_set($from, $to, $resolution, $maxIteration) ),
+                  self::OK
+            );
             return $jsonResponse;
         }
 
@@ -77,7 +88,7 @@
             $params = $request->getParsedBody();
             $error  = $this->validateParam($params);
             if(!$error['valid']) {
-                $errorResponse = $response->withJson($error['Error'],400);
+                $errorResponse = $response->withJson($error['Error'], self::BAD_REQUEST);
                 return $errorResponse;
             }
 
@@ -106,7 +117,10 @@
             $to->real      = $realTo;
             $to->imaginary = $imaginaryTo;
 
-            $jsonResponse = $response->withJson(array("response" => $this->define_set($from, $to, $resolution, $maxIteration, true)), 200);
+            $jsonResponse = $response->withJson(
+                  array( "response" => $this->define_set($from, $to, $resolution, $maxIteration, true) ),
+                  200
+            );
             return $jsonResponse;
         }
 
@@ -173,7 +187,7 @@
                     $current->real      = $real;
                     $current->imaginary = $imaginary;
 
-                    if($extended){
+                    if($extended) {
                         $set[$real . ""][$imaginary . ""] = $this->in_mandelBrot($current, $maxIteration);
                     } else {
                         $set[] = $this->in_mandelBrot($current, $maxIteration);
