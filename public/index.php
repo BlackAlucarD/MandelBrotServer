@@ -12,4 +12,16 @@
     // set the routes
     require __DIR__ . '/../app/routes.php';
 
-    $app->run();
+    // Give the system UNLIMITED TIME
+    set_time_limit(0);
+    ini_set('max_input_time', 0);
+    // and UNLIMITED POWER (memory)
+    ini_set('memory_limit', -1);
+
+    try {
+        $app->run();
+    } catch (Exception $exception) {
+        echo 'Error: ' . $exception;
+        exit;
+    }
+

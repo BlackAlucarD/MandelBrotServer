@@ -14,9 +14,7 @@
          */
         private static function in_mandelBrot(\Complex $point, $maxIteration = 255) {
 
-            $zn            = new \Complex();
-            $zn->real      = 0;
-            $zn->imaginary = 0;
+            $zn            = new \Complex(0, 0);
 
             for($i = 0; $i < $maxIteration; $i++) {
                 $zn = self::mandelBrot($zn, $point);
@@ -69,9 +67,7 @@
                 $y = 0;
 
                 foreach($imaginary_range as $imaginary) {
-                    $current            = new \Complex();
-                    $current->real      = $real;
-                    $current->imaginary = $imaginary;
+                    $current            = new \Complex($real,$imaginary);
 
                     if($extended) {
                         $set[$real . ""][$imaginary . ""] = self::in_mandelBrot($current, $maxIteration);

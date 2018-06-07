@@ -6,7 +6,7 @@
     class ApiTest extends TestCase {
 
         /**
-         * @throws \GuzzleHttp\Exception\GuzzleException
+         * Test Case which sends some request to our Api
          */
         public function testPost() {
             // localhost forwarding

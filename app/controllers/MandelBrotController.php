@@ -41,12 +41,6 @@
                 return $errorResponse;
             }
 
-            // Give the system UNLIMITED TIME
-            set_time_limit(0);
-            ini_set('max_input_time', 0);
-            // and UNLIMITED POWER (memory)
-            ini_set('memory_limit', -1);
-
             $realFrom      = doubleval($params['realFrom']);
             $realTo        = doubleval($params['realTo']);
             $imaginaryFrom = doubleval($params['imaginaryFrom']);
@@ -58,13 +52,8 @@
                 $maxIteration = intval($params['maxIteration']);
             }
 
-            $from            = new \Complex();
-            $from->real      = $realFrom;
-            $from->imaginary = $imaginaryFrom;
-
-            $to            = new \Complex();
-            $to->real      = $realTo;
-            $to->imaginary = $imaginaryTo;
+            $from = new \Complex($realFrom, $imaginaryFrom);
+            $to   = new \Complex($realTo, $imaginaryTo);
 
             $jsonResponse = $response->withJson(
                   array( "response" => \MandelBrotCalc::define_set($from, $to, $resolution, $maxIteration) ),
@@ -107,13 +96,8 @@
                 $maxIteration = intval($params['maxIteration']);
             }
 
-            $from            = new \Complex();
-            $from->real      = $realFrom;
-            $from->imaginary = $imaginaryFrom;
-
-            $to            = new \Complex();
-            $to->real      = $realTo;
-            $to->imaginary = $imaginaryTo;
+            $from = new \Complex($realFrom, $imaginaryFrom);
+            $to   = new \Complex($realTo, $imaginaryTo);
 
             $jsonResponse = $response->withJson(
                   array( "response" => \MandelBrotCalc::define_set($from, $to, $resolution, $maxIteration, true) ),
